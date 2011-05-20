@@ -7,7 +7,7 @@ Features
 
 Prerequisite
 ------------
-gem install oauth json
+	gem install oauth json
 
 Example
 -------
@@ -24,8 +24,8 @@ Example
 		plurk.authorize(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 
 	# Step 2. send request and get response in JSON
-	json = plurk.post('/APP/Polling/getPlurks', {:offset=>'2011-5-20T00:00:00'})
-	json = plurk.post('/APP/Timeline/plurkAdd'. {:content=>'hello world', :qualifier=>'says'}
+		json = plurk.post('/APP/Polling/getPlurks', {:offset=>'2011-5-20T00:00:00'})
+		json = plurk.post('/APP/Timeline/plurkAdd', {:content=>'hello world', :qualifier=>'says'})
 
 Author and License
 -------------------
