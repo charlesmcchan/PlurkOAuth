@@ -37,10 +37,40 @@ class Plurk
 
 	# input: plurk APP url, options in hash
 	# output: result in JSON
-	def post(url, options=nil)
+	def post(url, body=nil, headers=nil)
 		# For those APIs which does not need to be authorized (e.g. /APP/Profile/getPublicProfile)
 		@access_token = OAuth::AccessToken.new(@consumer, nil, nil) if @access_token==nil
-		resp = @access_token.post(url, options).body
+		resp = @access_token.post(url, body, headers).body
 		return JSON.parse(resp)
 	end
+
+	# input: filename
+	# output: image URL
+	def picupload filename
+		# Determine image type
+		type = case File.read(filename, 10)
+					 when /^GIF8/n then 'image/gif'
+					 when /^\x89PNG/n then 'image/png'
+					 when /^\xff\xd8\xff\xe0\x00\x10JFIF/n then 'image/jpeg'
+					 when /^\xff\xd8\xff\xe1(.*){2}Exif/n then 'image/jpeg'
+					 else 'application/octet-stream'
+					 end
+		# Generate and sign request header
+		uri = URI.parse(@consumer.options[:site] + '/APP/Timeline/uploadPicture')
+		req = Net::HTTP::Post.new(uri.path)
+		boundary = 'PlurkOAuth'
+		@access_token.sign!(req)
+		req['Content-Type'] = "multipart/form-data; boundary=#{boundary}"
+		# Generate multipart request body
+		body = []
+		body << "--#{boundary}\r\n"
+		body << "Content-Disposition: file; name=image; filename=\"#{filename}\"\r\n"
+		body << "Content-Type: #{type}\r\n"
+		body << "\r\n"
+		body << File.read(filename) 
+		body << "\r\n--#{boundary}--\r\n"
+		req.body = body.join
+		return JSON.parse(Net::HTTP.new(uri.host, uri.port).start {|http| http.request(req).body})
+	end
+
 end
