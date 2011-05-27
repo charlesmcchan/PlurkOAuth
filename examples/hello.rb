@@ -1,8 +1,5 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
-require 'rubygems'
-require 'oauth'
-require 'json'
 require '../plurk.rb'
 
 # Step 0. Setup OAuth client by create a instance of Plurk class
