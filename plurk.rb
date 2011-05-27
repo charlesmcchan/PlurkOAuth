@@ -32,11 +32,14 @@ class Plurk
 										when nil then @request_token.get_access_token :oauth_verifier=>key
 										else OAuth::AccessToken.new(@consumer, key, secret)
 										end
+		return @access_token
 	end
 
 	# input: plurk APP url, options in hash
 	# output: result in JSON
 	def post(url, options=nil)
+		# For those APIs which does not need to be authorized (e.g. /APP/Profile/getPublicProfile)
+		@access_token = OAuth::AccessToken.new(@consumer, nil, nil) if @access_token==nil
 		resp = @access_token.post(url, options).body
 		return JSON.parse(resp)
 	end
