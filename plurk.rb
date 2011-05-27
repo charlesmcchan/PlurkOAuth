@@ -37,10 +37,7 @@ class Plurk
 	# input: plurk APP url, options in hash
 	# output: result in JSON
 	def post(url, options=nil)
-		uri = URI.parse(@access_token.consumer.options[:site] + url)
-		req = Net::HTTP::Post.new(uri.path)
-		@access_token.sign!(req)
-		req.set_form_data(options) if options != nil
-		return JSON.parse(Net::HTTP.new(uri.host, uri.port).start {|http| http.request(req)}.body)
+		resp = @access_token.post(url, options).body
+		return JSON.parse(resp)
 	end
 end
