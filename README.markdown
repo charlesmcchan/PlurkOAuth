@@ -11,21 +11,7 @@ Prerequisite
 
 Example
 -------
-	# Step 1. setup OAuth client
-		# for those who does not have access token yet
-		plurk = Plurk.new(CONSUMER_KEY, COMSUMER_SECRET)
-		puts plurk.get_authorize_url
-		print 'Code: '
-		code = gets.chomp!
-		access_token = plurk.authorize code
-
-		# for those have access token
-		plurk = Plurk.new(CONSUMER_KEY, COMSUMER_SECRET)
-		plurk.authorize(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-
-	# Step 2. send request and get response in JSON
-		json = plurk.post('/APP/Polling/getPlurks', {:offset=>'2011-5-20T00:00:00'})
-		json = plurk.post('/APP/Timeline/plurkAdd', {:content=>'hello world', :qualifier=>'says'})
+	See examples/hello.rb for detail
 
 Author and License
 -------------------
